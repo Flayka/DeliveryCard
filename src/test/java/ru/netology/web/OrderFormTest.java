@@ -15,11 +15,6 @@ import static com.codeborne.selenide.Selenide.open;
 
 public class OrderFormTest {
 
-    @BeforeEach
-    void setUp() {
-        Configuration.headless =true;
-}
-
     @Test
     void shouldCorrectRegister() {
         open("http://localhost:9999");

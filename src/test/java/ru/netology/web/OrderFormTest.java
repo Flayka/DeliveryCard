@@ -1,5 +1,7 @@
 package ru.netology.web;
 
+import com.codeborne.selenide.Configuration;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
@@ -12,6 +14,11 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class OrderFormTest {
+
+    @BeforeEach
+    void setUp() {
+        Configuration.headless =true;
+}
 
     @Test
     void shouldCorrectRegister() {

@@ -1,16 +1,16 @@
 package ru.netology.web;
 
-import com.codeborne.selenide.Configuration;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.open;
 
 public class OrderFormTest {
 
@@ -32,7 +32,7 @@ public class OrderFormTest {
     }
 
     @Test
-    void shouldSendEmptyForm(){
+    void shouldSendEmptyForm() {
         open("http://localhost:9999");
         $(byText("Забронировать")).click();
         $(byText("Поле обязательно для заполнения")).isDisplayed();
@@ -55,7 +55,7 @@ public class OrderFormTest {
     }
 
     @Test
-    void  shouldNoDate() {
+    void shouldNoDate() {
         open("http://localhost:9999");
         $("[placeholder='Город']").setValue("Абакан");
         $(".menu-item_type_block").click();
@@ -134,5 +134,4 @@ public class OrderFormTest {
         $(byText("Успешно!")).waitUntil(visible, 11000);
         $(".notification__closer").click();
     }
-
 }

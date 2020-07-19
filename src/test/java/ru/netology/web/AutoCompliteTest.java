@@ -1,10 +1,11 @@
 package ru.netology.web;
 
-import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
-import static com.codeborne.selenide.Condition.*;
+import java.time.LocalDate;
+
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -13,39 +14,34 @@ public class AutoCompliteTest {
     @Test
     void shouldFillCorrectRegisterBySearching() {
         open("http://localhost:9999");
-        $("[placeholder='Город']").setValue("ба");
+        $("[data-test-id='city'] .input__control").setValue("ба");
         $(".input__menu").sendKeys(Keys.chord(Keys.DOWN, Keys.DOWN, Keys.ENTER));
         $$(".input__box").find(text("Барнаул"));
 
-        $("[placeholder='Дата встречи']").click();
+        $("[data-test-id='date'] .input__control").click();
 
-        SelenideElement yearButton = $("[data-step='12']");
-        SelenideElement year = $(".calendar__name");
-        while (!year.getText().equals("Июль 2025")) {
-            yearButton.click();
+        LocalDate date = LocalDate.now();
+        int yearNow = date.getYear();
+        int monthNow = date.getMonthValue();
+
+        LocalDate dateSearch = LocalDate.of(2025, 1, 15);
+        int yearSearch = dateSearch.getYear() - yearNow;
+        int monthSearch = dateSearch.getMonthValue();
+        int daySearch = dateSearch.getDayOfMonth();
+
+        for (int i = 0; i < yearSearch; i++) {
+            $("[data-step='12']").click();
         }
-        SelenideElement monthButton = $("[data-step='1']");
-        SelenideElement month = $(".calendar__title");
-        while (!month.getText().equals("Октябрь 2025")) {
-            monthButton.click();
+        if (monthSearch > monthNow) {
+            for (int i = 0; i < monthSearch - monthNow; i++) {
+                $("[data-step='1']").click();
+            }
+        } else {
+            for (int i = 0; i < monthNow - monthSearch; i++) {
+                $("[data-step='-1']").click();
+            }
         }
-
-        $$(".calendar__day").findBy(exactTextCaseSensitive("15")).click();
-        $("[placeholder='Дата встречи']").find(byText("15.10.2025"));
-
-    }
-
-    @Test
-    void shouldFillCorrectRegisterByClick() {
-        open("http://localhost:9999");
-        $("[placeholder='Город']").setValue("ба");
-        $(".input__menu").sendKeys(Keys.chord(Keys.DOWN, Keys.DOWN, Keys.ENTER));
-        $$(".input__box").find(text("Барнаул"));
-
-        $("[placeholder='Дата встречи']").click();
-        $("[data-step='12']").click();
-        $("[data-step='1']").doubleClick().click();
-        $$(".calendar__day").findBy(exactText("16")).click();
-        $("[placeholder='Дата встречи']").find(String.valueOf(text("16.10.2021")));
+        $$(".calendar__day").get(daySearch).click();
+        $("[data-test-id='date'] .input__control").find(byText("15.01.2025"));
     }
 }
